@@ -5,10 +5,51 @@ import os
 file_to_load = os.path.join("Election-Analysis/election_results.csv")
 # Create a filename variable to a direct or indirect path to the file.
 file_to_save = os.path.join("Election-Analysis", "election_analysis.txt")
+#initialaize total volume votes
+total_votes = 0
+
+#Initialize list of candidates
+candidate_options =[]
+# create empty candidate votes dictionary
+candidate_votes = {}
+winning_candidate = ""
+winning_count =0
+winning_percentage = 0
+
 ## Using the with statement open the file as a text file.
 with open(file_to_load, "r") as election_data:
     # Read the file object with the reader function.
     file_reader = csv.reader(election_data)
     #Print the header row
-    headers = next(file_reader)
-    print(headers)
+    headers = next (election_data)
+#print each row in a csv file
+    for row in file_reader:
+        total_votes += 1
+        candidate_name = row[2]
+        if candidate_name not in candidate_options:
+            candidate_options.append(candidate_name)
+            candidate_votes[candidate_name] = 0
+        candidate_votes[candidate_name] +=1
+    # Iterate through candidate list
+    for candidate in candidate_votes:
+        #retrieve vote count of a candidate
+        votes = candidate_votes[candidate]
+        # calculate proportion of the votes
+        vote_percentage = float(votes)/float(total_votes)*100
+        #print all candidates
+        print(f"\n"
+              f"{candidate} has got {votes} votes or {vote_percentage:.1f} % of total votes.\n")
+
+        # find wining percentage and count
+        if votes > winning_count and vote_percentage > winning_percentage:
+            winning_count = votes
+            winning_percentage = vote_percentage
+            winning_candidate = candidate
+    print(
+        f"------------------------------\n"
+        f"Winner: {winning_candidate}\n"
+        f"Winning Vote Count: {winning_count}\n"
+        f"Winning Percentage: {winning_percentage:.1f} %\n"
+        f"------------------------------\n ")
+
+
